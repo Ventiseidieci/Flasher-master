@@ -1,0 +1,447 @@
+#include <Arduino.h>
+#include <analogWrite.h>
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
+#include <Vbite_Batt_14500.h>
+#include <iostream>
+#include <string.h>
+using namespace std;
+Vbite_Batt_14500 BL;
+/* VARIOUS VARIABLES */
+
+/* VARIABLES FOR NOTIFICATIONS */
+int NotOff = 0;
+int NotCountOff = 0;
+int NotOn = 0;
+int NotCountOn = 0;
+int NotInt = 0;
+int NotCountInt = 0;
+int NotSin = 0;
+int NotCountSin = 0;
+int NotMin = 0;
+int NotCountMin = 0;
+int NotMid = 0;
+int NotCountMid = 0;
+int NotMax = 0;
+int NotCountMax = 0;
+/* VARIABLES FOR MOTOR SIN FUNCTION */
+int brightStep = 5; //Steps for SIN Function
+int brightness = 60; //Default level of Power for SIN Function
+const byte motorpin= 2; //In This Case 2 is Used to See if it Works, but this is the Onboard Led Pin
+int fadeAmount = 5;
+int NotPower = 0;
+/* VARIABLES TO MAKE WORKING MOTOR ANALOGWRITE-FADE */
+const int channel =0;
+const int frequency = 1000;
+const int resolution = 8;
+const int in1 = 27; // motore pwmA
+const int in2 = 26; // Verifica Utilizzo
+const int in4 = 23;  // Verifica Utilizzo
+const int led = 25; // Pin to Control Led
+const int ledRed = 33; // Pin to Control Red Led
+const int inCharge = 12; // pin to read if the battery is in charge
+const int chargeComplete = 14; // pin to read if the batter is charged 
+int i = 0; //Variable to Manage the Motor Function and its Power Level
+int pushbutton;
+TaskHandle_t Task1, Task2;
+SemaphoreHandle_t variabile;
+int counter = 0;
+int notifica = 0;
+/* VARIOUS VARIABLES */
+char batt[50]; // To Transmit Battery Level Via Bluetooth
+int Pd = 180;
+int PdSin = 200;
+int BatVolt = 0;
+int NotBatVolt = 0;
+/* VARIABLES TO MAKE LED BLINKING ON IDLE */
+unsigned long previousMillis = 0;        // will store last time LED was updated
+const long interval = 1000;
+unsigned long currentMillis = millis();
+// VARIABLES FOR BLE MULTICONNECTION
+BLECharacteristic *pCharacteristic;
+BLECharacteristic *BATTCharacteristic;
+bool deviceConnected = false;
+BLEServer* pServer = NULL;
+bool oldDeviceConnected = false;
+uint32_t value = 0;
+// To Generate UUIDs:
+// https://www.uuidgenerator.net/
+// Defining Services and Characteristics
+#define SERVICE_UUID        "9899c9d0-439d-11ec-81d3-0242ac220006"
+#define CHARACTERISTIC_UUID_RX "9899cbec-439d-11ec-81d3-0242ac220006"
+#define CHARACTERISTIC_UUID_TX "9899ccdc-439d-11ec-81d3-0242ac220006"
+#define CHARACTERISTIC_UUID_TX_BATT "9899cccc-439d-11ec-81d3-0242ac220006"
+// Class fot BLE Server Callbacks Multiconnection
+class MyServerCallbacks: public BLEServerCallbacks {
+void onConnect(BLEServer* pServer) {
+  deviceConnected = true;
+  BLEDevice::startAdvertising();
+ 
+};
+void onDisconnect(BLEServer* pServer) {
+  deviceConnected = false;
+}
+};
+class MyCallbacks: public BLECharacteristicCallbacks {
+void onWrite(BLECharacteristic *pCharacteristic) {
+std::string rxValue = pCharacteristic->getValue();
+if (rxValue.length() > 0) {     
+  delay(350);
+  if (rxValue == "off") {
+    i = 1; // Motor Off
+    NotOff = 1;
+  }
+  if (rxValue == "on") {
+    i = 2; // Motor On Continuous
+    NotOn = 1;
+  }
+  if (rxValue == "int") {
+    i = 3; // Motor On Intermittent
+    NotInt = 1;
+  }
+  if (rxValue == "sin") {
+    i = 4; // Motor On Sinuosidal
+    NotSin = 1;
+  }
+  if (rxValue == "max") {
+    Pd = 240; // Motor Max Power
+    PdSin = 240; // Motor Max Power Sin
+    NotMax = 1;
+  }
+  if (rxValue == "mid") {
+    Pd = 180; // Motor Mid Power (Default)
+    PdSin = 200; // Motor Mid Power Sin
+    NotMid = 1;
+  }
+  if (rxValue == "min") {
+    Pd = 120; // Motor Min Power
+    PdSin = 150; // Motor Min Power Sin
+    NotMin = 1;
+  }
+}
+}
+};
+// CODICE PER IL CONTROLLO DEL MOTORE E DELL'ACCENSIONE DEL DISPOSITIVO
+void codeForTask2( void * parameter ) {      // nel task 2 DUE metterò la lettura della variabile ma soprattutto i cicli che effettuerà il motore
+//Serial.begin(9600);
+for (;;) {
+  if (BatVolt > 0) {
+    NotBatVolt = 0;
+  }
+  if (BatVolt == 0){
+    i = 1;
+  }
+  if (NotMin == 1 && NotCountMin == 0) {
+    NotOff = 0;
+    NotOn = 0;
+    NotInt = 0;
+    NotSin = 0;
+    NotMin = 0;
+    NotMid = 0;
+    NotMax = 0;
+    NotCountOff = 0;
+    NotCountOn = 0;
+    NotCountInt = 0;
+    NotCountSin = 0;
+    NotCountMin = 1;
+    NotCountMid = 0;
+    NotCountMax = 0;
+    NotPower = 1;
+    pCharacteristic->setValue("min"); // Min Power
+    pCharacteristic->notify();
+  }
+  if (NotMin == 1 && NotCountMin == 0) {
+    NotOff = 0;
+    NotOn = 0;
+    NotInt = 0;
+    NotSin = 0;
+    NotMin = 0;
+    NotMid = 0;
+    NotMax = 0;
+    NotCountOff = 0;
+    NotCountOn = 0;
+    NotCountInt = 0;
+    NotCountSin = 0;
+    NotCountMin = 0;
+    NotCountMid = 1;
+    NotCountMax = 0;
+    NotPower = 1;
+    pCharacteristic->setValue("mid"); // Mid Power
+    pCharacteristic->notify();
+  }
+  if (NotMax == 1 && NotCountMax == 0) {
+    NotOff = 0;
+    NotOn = 0;
+    NotInt = 0;
+    NotSin = 0;
+    NotMin = 0;
+    NotMid = 0;
+    NotMax = 0;
+    NotCountOff = 0;
+    NotCountOn = 0;
+    NotCountInt = 0;
+    NotCountSin = 0;
+    NotCountMin = 0;
+    NotCountMid = 0;
+    NotCountMax = 1;
+    NotPower = 1;
+    pCharacteristic->setValue("max"); // Max Power
+    pCharacteristic->notify();
+  }
+  switch (i) {
+    case 1: //MOTOR OFF
+      if (NotOff == 1 && NotCountOff == 0) {
+        NotOff = 0;
+        NotOn = 0;
+        NotInt = 0;
+        NotSin = 0;
+        NotMin = 0;
+        NotMid = 0;
+        NotMax = 0;
+        NotCountOff = 1;
+        NotCountOn = 0;
+        NotCountInt = 0;
+        NotCountSin = 0;
+        NotCountMin = 0;
+        NotCountMid = 0;
+        NotCountMax = 0;
+        pCharacteristic->setValue("off"); // Turn Off Motor
+        pCharacteristic->notify();
+      }
+      analogWrite(in1, 0); 
+      digitalWrite(in2, LOW);
+      if (BatVolt == 0 && NotBatVolt == 0) {
+        pCharacteristic->setValue("low"); // Low Power
+        pCharacteristic->notify();
+        NotBatVolt = 1;
+      }
+      currentMillis = millis();
+      if (currentMillis - previousMillis >= interval) {
+        // save the last time you blinked the LED
+        previousMillis = currentMillis;
+        analogWrite(led, 255);
+        delay(100);
+        analogWrite(led, 0);
+        delay(200);
+        analogWrite(led, 255);
+        delay(100);
+        analogWrite(led, 0);
+      }
+    break;
+    case 2: //MOTOR ON CONTINUOUS
+      if (NotOn == 1 && NotCountOn == 0) {
+        NotOff = 0;
+        NotOn = 0;
+        NotInt = 0;
+        NotSin = 0;
+        NotMin = 0;
+        NotMid = 0;
+        NotMax = 0;
+        NotCountOff = 0;
+        NotCountOn = 1;
+        NotCountInt = 0;
+        NotCountSin = 0;
+        NotCountMin = 0;
+        NotCountMid = 0;
+        NotCountMax = 0;
+        pCharacteristic->setValue("on"); // Motor On Continuous
+        pCharacteristic->notify();
+        analogWrite(in1, 60);
+        delay(50);
+      }
+      analogWrite(in1, Pd); // Turn On Motor
+      analogWrite(led, Pd);
+      digitalWrite(in2, LOW);
+    break;
+    case 3: // MOTOR ON INTERMITTENT
+      if (NotInt == 1 && NotCountInt == 0) {
+        NotOff = 0;
+        NotOn = 0;
+        NotInt = 0;
+        NotSin = 0;
+        NotMin = 0;
+        NotMid = 0;
+        NotMax = 0;
+        NotCountOff = 0;
+        NotCountOn = 0;
+        NotCountInt = 1;
+        NotCountSin = 0;
+        NotCountMin = 0;
+        NotCountMid = 0;
+        NotCountMax = 0;
+        pCharacteristic->setValue("int"); // Motor On Intermittent
+        pCharacteristic->notify();
+      }
+      analogWrite(in1, Pd);    // Motor On
+      analogWrite(led, Pd);
+      digitalWrite(in2, LOW);
+      delay(500);
+      analogWrite(in1, 60);       //Motor Off
+      analogWrite(led, 0);
+      digitalWrite(in2, LOW);
+      delay(250);
+    break;
+    case 4: // MOTOR ON SINUOSIDAL
+      if (NotSin == 1 && NotCountSin == 0) {
+        NotOff = 0;
+        NotOn = 0;
+        NotInt = 0;
+        NotSin = 0;
+        NotMin = 0;
+        NotMid = 0;
+        NotMax = 0;
+        NotCountOff = 0;
+        NotCountOn = 0;
+        NotCountInt = 0;
+        NotCountSin = 1;
+        NotCountMin = 0;
+        NotCountMid = 0;
+        NotCountMax = 0;
+        pCharacteristic->setValue("sin"); // Motor On Sinuosidal
+        pCharacteristic->notify();
+      }
+      if (NotPower != 0) {
+        brightness = 60;
+        brightStep = 5;
+        NotPower = 0;
+      }
+      brightness += brightStep;
+      analogWrite(in1, brightness);
+      analogWrite(led, brightness-60);
+      if (brightness <= 60 || brightness >= PdSin ) {
+        brightStep = -brightStep;
+      }
+      if (PdSin == 240 && brightness > 240) {
+        brightness = 60;
+        brightStep = 5;
+      }
+      if (PdSin == 200 && brightness > 200) {
+        brightness = 60;
+        brightStep = 5;
+      }
+      if (PdSin == 150 && brightness > 150) {
+        brightness = 60;
+        brightStep = 5;
+      }
+      delay(50);
+    break;
+    default:
+      if (i >= 5 || i == 0) {
+        delay(50);
+        i = 0;
+        currentMillis = millis();
+        if (currentMillis - previousMillis >= interval) {
+          // save the last time you blinked the LED
+          previousMillis = currentMillis;
+          analogWrite(led, 255);
+          delay(100);
+          analogWrite(led, 0);
+          delay(200);
+          analogWrite(led, 255);
+          delay(100);
+          analogWrite(led, 0);
+        }
+      }
+    break;
+  }
+  xSemaphoreGive( variabile );
+  //Serial.println("====== fine ciclo core 1 ========");
+}
+}
+// The Setup Function Runs Once When you Press Reset or Power the Board
+void setup() {
+ledcAttachPin(motorpin, channel); // Assign Pin to One Channel
+// Inizializza Canale
+// Channel 0-15, Resolution 1-16bits, Limit Frequency Depending on Resolution
+// ledcSetup(uint8_t channel, uint32_t freq, uint8_t resolution_bits);
+ledcSetup(motorpin, frequency, resolution); // 12kHz PWM, 8-bit Resolution
+pinMode(in1, OUTPUT); // Set Pins to Output dei Motori era in1 Prima di Diventare il LED
+pinMode(in2, OUTPUT);
+digitalWrite(in2, LOW);
+ 
+pinMode(ledRed, OUTPUT);
+pinMode(in4, OUTPUT);
+pinMode(led, OUTPUT);
+analogWrite(led, 255);
+ 
+// pinMode(4, INPUT);       // Ingresso Pulsante Fisico (Adesso non Serve più)
+Serial.begin(115200);
+//START BLE RW COMPONENT
+variabile = xSemaphoreCreateMutex();
+//Set Pinmode for the Builtin Led
+pinMode(LED_BUILTIN, OUTPUT);
+// Create the BLE Device
+BLEDevice::init("VBITE-BLE-12JULY22");
+// Create the BLE Server
+BLEServer *pServer = BLEDevice::createServer();
+pServer->setCallbacks(new MyServerCallbacks());
+// Create the BLE Service
+BLEService *pService = pServer->createService(SERVICE_UUID);
+// Create a BLE Characteristic to Send Data
+pCharacteristic = pService->createCharacteristic(
+                  CHARACTERISTIC_UUID_TX,
+                  BLECharacteristic::PROPERTY_NOTIFY
+     );
+// Create a BLE Characteristic to Send Data for Battery Status   
+BATTCharacteristic = pService->createCharacteristic(
+                  CHARACTERISTIC_UUID_TX_BATT,
+                  BLECharacteristic::PROPERTY_NOTIFY
+     );     
+// BLE2902 Needed to Notify
+pCharacteristic->addDescriptor(new BLE2902());
+BATTCharacteristic->addDescriptor(new BLE2902());
+// Characteristic for Receiving Data
+BLECharacteristic *pCharacteristic = pService->createCharacteristic(
+                  CHARACTERISTIC_UUID_RX,
+                  BLECharacteristic::PROPERTY_WRITE
+     );
+pCharacteristic->setCallbacks(new MyCallbacks());
+BATTCharacteristic->setCallbacks(new MyCallbacks());
+// Start the Service
+pService->start();
+// Start Advertising
+pServer->getAdvertising()->start();
+Serial.println("Waiting a client connection to notify...");
+// END BLE RW CODE
+// A Viewer Suggested to Use :     &codeForTask1, Because his ESP Crashed
+xTaskCreatePinnedToCore(
+codeForTask2,
+"led2Task",
+  10000,      /* Stack Size in Words */
+  NULL,       /* Task in\ut Parameter */
+  0,          /* Priority of the Task */
+  NULL,       /* Task Handle. */
+  0);  /* Core where the Task Should Run */
+}
+void loop() {
+// Notify Changed Value
+if (deviceConnected==true) {
+ 
+ BLEDevice::getAdvertising()->stop();
+ 
+Serial.println("Device Connected");
+Serial.print("Volts: ");
+Serial.println(BL.getBatteryVolts());
+Serial.print("Charge level: ");
+Serial.println(BL.getBatteryChargeLevel());
+dtostrf(BL.getBatteryChargeLevel(), 5, 0, batt);
+strcat(batt," %");
+BATTCharacteristic->setValue(batt); // Mando Percentuale Carica Batteria
+BATTCharacteristic->notify();
+BatVolt = 95; //BL.getBatteryChargeLevel();
+delay(5000); // Bluetooth Stack will go into Congestion, if too Many Packets are Sent, in 6 Hours Test i Was Able to go as low as 3ms
+}else
+{
+delay(50);
+}
+// Disconnecting
+if ((deviceConnected==false) && (oldDeviceConnected==false)) {
+delay(500); // Give the Bluetooth Stack the Chance to get Things Ready
+//pServer->startAdvertising(); // Restart Advertising
+//pServer->getAdvertising()->start();
+BLEDevice::startAdvertising();
+}
+}
+
