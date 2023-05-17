@@ -4,6 +4,7 @@ from ..GUI import view
 import queue
 import os
 import sys
+from PySide6 import QtCore, QtWidgets, QtGui
 
 class Controller():
      
