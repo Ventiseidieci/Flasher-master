@@ -1,19 +1,12 @@
-import customtkinter
-from ..backend import backend, model
-from ..GUI import view
-import queue
-import os
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 
-class Controller():
+class Controller(QtCore.QObject):
      
-     def __init__(self):
+     def __init__(self, model):
+          super().__init__()
+          self.model = model
           
-          self.app = QtWidgets.QApplication(sys.argv)
-          label = QtWidgets.QLabel("Hello World!")
-          label.show()
-          self.app.exec()
           
 #           self.root = customtkinter.CTk()
 #           if getattr(sys, 'frozen', False):
