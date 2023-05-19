@@ -1,5 +1,5 @@
 from PySide6 import QtCore
-
+from Flasher.backend import backend
 class Model(QtCore.QObject):
      
      def __init__(self):
@@ -16,3 +16,6 @@ class Model(QtCore.QObject):
 
      def setSku(self, sku):
           self.sku = sku
+     
+     def getBackend(self):
+          return backend.Backend()

@@ -1,5 +1,7 @@
 import sys
+
 from PySide6 import QtCore, QtWidgets, QtGui
+
 
 class Controller(QtCore.QObject):
      
@@ -63,9 +65,10 @@ class Controller(QtCore.QObject):
           
      #      self.myBackend.flashProgram(container)
      
-     # def getBoardList(self):
-     #      #return serialRead.mySerial.get_serial_ports()
-     #      return self.myBackend.getPorts()
+     def getBoardList(self):
+          #return serialRead.mySerial.get_serial_ports()
+          self.myBackend = self.model.getBackend()
+          return self.myBackend.getPorts()
           
      # def updateList(self, event, container):
      #      #container.configure(values=serialRead.mySerial.get_serial_ports())

@@ -1,6 +1,6 @@
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtCore import QObject
 from PySide6.QtQml import QQmlApplicationEngine
-class View():
+class View(QObject):
      
      def __init__(self, app, model, controller):
           super().__init__()
@@ -10,6 +10,8 @@ class View():
           engine = QQmlApplicationEngine()
           engine.quit.connect(app.quit)
           engine.load('Flasher/GUI/mainUI.qml')
+          devices = self.controller.getBoardList()
+          engine.rootContext().setContextProperty("values", devices)
           app.exec()
 
      

@@ -52,6 +52,7 @@ Rectangle {
         width: 479
         height: 52
         state: "Seleziona una board..."
+        model: values
     }
 
     Text {
@@ -70,9 +71,9 @@ Rectangle {
     Button {
         id: flash_button
         x: 573
-        y: 172
+        y: 174
         width: 472
-        height: 52
+        height: 40
         text: qsTr("Flash")
         highlighted: false
         spacing: 8
@@ -81,6 +82,12 @@ Rectangle {
         flat: false
         icon.color: "#ff7175"
         font.pointSize: 20
+        background: Rectangle {
+            color: parent.down ? "#88dd66" : (parent.hovered ? "#c57175" : "#ff7175")
+            radius: 5
+            
+        }
+        
     }
 
     TextArea {
