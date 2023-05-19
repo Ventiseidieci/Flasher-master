@@ -11,13 +11,13 @@ import QtQuick.Controls 6.5
 
 ApplicationWindow{
     visible: true
-    width: 1920
-    height: 1080
+    width: 1080
+    height: 720
     title: "Vbite Flasher"
     
-    Rectangle {
-    width: 1920
-    height: 1080
+Rectangle {
+    width: 1080
+    height: 720
     color: "#0c1012"
     radius: 0
 
@@ -30,49 +30,49 @@ ApplicationWindow{
         font.pointSize: 42
         minimumPixelSize: 19
         minimumPointSize: 27
-        anchors.verticalCenterOffset: -456
+        anchors.verticalCenterOffset: -302
         anchors.horizontalCenterOffset: 0
         anchors.centerIn: parent
     }
 
     Image {
         id: favicon
-        x: 100
-        y: 41
-        width: 90
-        height: 86
+        x: 35
+        y: 26
+        width: 63
+        height: 64
         source: "images/favicon.icns"
         fillMode: Image.PreserveAspectFit
     }
 
     ComboBox {
         id: combobox
-        x: 100
-        y: 297
-        width: 824
-        height: 68
+        x: 35
+        y: 172
+        width: 479
+        height: 52
         state: "Seleziona una board..."
     }
 
     Text {
         id: text1
-        x: 100
-        y: 239
-        width: 824
-        height: 52
+        x: 35
+        y: 130
+        width: 442
+        height: 36
         color: "#ffffff"
         text: qsTr("Seleziona la Board per la programmazione:")
-        font.pixelSize: 30
+        font.pixelSize: 20
         verticalAlignment: Text.AlignVCenter
         font.family: "Verdana"
     }
 
     Button {
         id: flash_button
-        x: 992
-        y: 297
-        width: 799
-        height: 68
+        x: 573
+        y: 172
+        width: 472
+        height: 52
         text: qsTr("Flash")
         highlighted: false
         spacing: 8
@@ -80,30 +80,31 @@ ApplicationWindow{
         icon.source: ""
         flat: false
         icon.color: "#ff7175"
-        font.pointSize: 30
+        font.pointSize: 20
     }
 
     TextArea {
         id: textArea
-        x: 100
-        y: 452
-        width: 1691
-        height: 580
+        x: 35
+        y: 298
+        width: 1010
+        height: 378
         state: ""
-        placeholderText: qsTr("prova")
+        placeholderText: qsTr("Text Area")
     }
 
     Text {
         id: text2
-        x: 100
-        y: 387
-        width: 824
-        height: 52
+        x: 35
+        y: 248
+        width: 272
+        height: 44
         color: "#ffffff"
         text: qsTr("Output Terminal")
-        font.pixelSize: 30
+        font.pixelSize: 20
         verticalAlignment: Text.AlignVCenter
         font.family: "Verdana"
     }
 }
+
 }
