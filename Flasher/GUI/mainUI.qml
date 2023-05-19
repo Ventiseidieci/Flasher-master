@@ -52,7 +52,7 @@ Rectangle {
         width: 479
         height: 52
         state: "Seleziona una board..."
-        model: values
+        model: devices
     }
 
     Text {

@@ -11,7 +11,7 @@ class View(QObject):
           engine.quit.connect(app.quit)
           engine.load('Flasher/GUI/mainUI.qml')
           devices = self.controller.getBoardList()
-          engine.rootContext().setContextProperty("values", devices)
+          engine.rootContext().setContextProperty("devices", devices) # Nel contest (file qml) va a trovare una variabile che si chiama values e associa il valore della variabile devices
           app.exec()
 
      
