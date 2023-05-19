@@ -36,7 +36,7 @@ ApplicationWindow{
     }
 
     Image {
-        // id: favicon
+        id: favicon
         x: 100
         y: 41
         width: 90
@@ -46,7 +46,7 @@ ApplicationWindow{
     }
 
     ComboBox {
-        // id: combobox
+        id: combobox
         x: 100
         y: 297
         width: 824
@@ -55,7 +55,7 @@ ApplicationWindow{
     }
 
     Text {
-        // id: text1
+        id: text1
         x: 100
         y: 239
         width: 824
@@ -67,24 +67,24 @@ ApplicationWindow{
         font.family: "Verdana"
     }
 
-    // Button {
-    //     id: flash_button
-    //     x: 992
-    //     y: 297
-    //     width: 799
-    //     height: 68
-    //     text: qsTr("Flash")
-    //     highlighted: false
-    //     spacing: 8
-    //     font.family: "Verdana"
-    //     icon.source: ""
-    //     flat: false
-    //     icon.color: "#ff7175"
-    //     font.pointSize: 30
-    // }
+    Button {
+        id: flash_button
+        x: 992
+        y: 297
+        width: 799
+        height: 68
+        text: qsTr("Flash")
+        highlighted: false
+        spacing: 8
+        font.family: "Verdana"
+        icon.source: ""
+        flat: false
+        icon.color: "#ff7175"
+        font.pointSize: 30
+    }
 
     TextArea {
-        // id: textArea
+        id: textArea
         x: 100
         y: 452
         width: 1691
@@ -94,7 +94,7 @@ ApplicationWindow{
     }
 
     Text {
-        // id: text2
+        id: text2
         x: 100
         y: 387
         width: 824

@@ -10,8 +10,7 @@ class View():
           engine = QQmlApplicationEngine()
           engine.quit.connect(app.quit)
           engine.load('Flasher/GUI/mainUI.qml')
-          #self.frame = customtkinter.CTkFrame(master)
-          #self.frame.grid()
+          app.exec()
 
      
      # def getViewPanel(self):
