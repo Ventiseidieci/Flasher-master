@@ -14,8 +14,11 @@ ApplicationWindow{
     width: 1080
     height: 720
     title: "Vbite Flasher"
+    objectName: "root"
     
 Rectangle {
+    objectName: "rectangle"
+    id: "rectangle"
     width: 1080
     height: 720
     color: "#0c1012"
@@ -93,6 +96,7 @@ Rectangle {
     }
 
     TextArea {
+        objectName: "outputTextArea"
         id: outputTextArea
         x: 35
         y: 298
@@ -103,12 +107,12 @@ Rectangle {
         readOnly: true
     }
 
-    Connections {
-        target: commandRunner
-        function onOutputChanged(output) {
-            outputTextArea.text = output
-        }
-    }
+    // Connections {
+    //     target: commandRunner
+    //     function onOutputChanged(output) {
+    //         outputTextArea.text = output
+    //     }
+    // }
 
     Text {
         id: text2

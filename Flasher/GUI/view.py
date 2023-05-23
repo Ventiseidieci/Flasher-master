@@ -1,5 +1,6 @@
 import sys
 from PySide6.QtCore import QObject, Slot, Property, Signal, QProcess
+from PySide6.QtQuick import QQuickItem, QQuickWindow
 from PySide6.QtQml import QQmlApplicationEngine
 import subprocess
 class FlashButton(QObject):
@@ -43,13 +44,11 @@ class CommandRunner(QObject):
           self.outputs = []
           self.textArea = textArea
           self.process = QProcess()
-          self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
+          # self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
           self.process.readyReadStandardOutput.connect(self.readOutput)
           self.process.finished.connect(self.handleFinished)
           self.commands = []
           self.currentIndex = 0
-          
-          self.startNextCommand
           
      @Slot(str)
      def setCommands(self, commands):
@@ -74,12 +73,15 @@ class CommandRunner(QObject):
                # print(output)
                # sys.stdout.flush()
                # self.outputChanged.emit(str("cazzo"))
+          
+          self.startNextCommand()
                
                
      def startNextCommand(self):
           if self.currentIndex < len(self.commands):
                command = self.commands[self.currentIndex]
-               self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
+               # self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
+               self.process.setProgram("python")
                self.process.setArguments(command)
                self.process.start()
                self.currentIndex += 1
@@ -93,14 +95,15 @@ class CommandRunner(QObject):
           # print(output)
      
      def handleFinished(self):
-          self.textArea.append("processo terminato. ")
-          self.startNextCommand
+          self.textArea.appendPlainText("processo terminato. ")
+          self.startNextCommand()
 class View(QObject):
      
      def __init__(self, app, model, controller):
           super().__init__()
           self._model = model
           self._controller = controller
+          self.text_area = None
           
           engine = QQmlApplicationEngine()
           engine.quit.connect(app.quit)
@@ -108,7 +111,15 @@ class View(QObject):
           devices = self._controller.getBoardList()
           engine.rootContext().setContextProperty("devices", devices) # Nel contest (file qml) va a trovare una variabile che si chiama values e associa il valore della variabile devices
           
-          self.text_area = engine.rootObjects()[0].findChild(QObject, "textArea")
+          application_window = engine.rootObjects()[0]
+
+          self.rectangle = application_window.findChild(QQuickItem, "rectangle") #type: ignore
+          # figli = self.rectangle.children() #type: ignore
+          
+          # for figlio in figli:
+          #      print(figlio.objectName())
+          self.text_area = self.rectangle.findChild(QQuickItem, "outputTextArea") #type: ignore
+          
           
           combo_box_handler = ComboBoxHandler(self._controller)
           engine.rootContext().setContextProperty("comboBoxHandler", combo_box_handler)

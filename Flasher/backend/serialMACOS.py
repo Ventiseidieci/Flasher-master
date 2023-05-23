@@ -35,7 +35,7 @@ class serialMACOS(serialInterface.serialInterface):
 
      def flashProgramNVS(self, choice):
           choice = choice
-          command = [ "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
      
      def flashProgramBootloader(self, choice):
