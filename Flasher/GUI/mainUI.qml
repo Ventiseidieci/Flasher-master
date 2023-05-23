@@ -100,6 +100,7 @@ Rectangle {
         height: 378
         state: ""
         placeholderText: qsTr("Text Area")
+        readOnly: true
     }
 
     Connections {

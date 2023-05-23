@@ -13,7 +13,7 @@ class FlashButton(QObject):
      @Slot()
      def handleButtonClicked(self):
           commands = self._controller.flash(self._model.getBoardName())
-          self._commandRunner.runCommands(commands)
+          self._commandRunner.setCommands(commands)
 class ComboBoxHandler(QObject):
      
      selectedItemChanged = Signal()
@@ -36,32 +36,65 @@ class ComboBoxHandler(QObject):
                print("Device seleizonato", self._selectedItem)
                
 class CommandRunner(QObject):
-    
-     outputChanged = Signal(str)
-     outputs = []
-     @Slot(str)
-     def runCommands(self, commands):
-
-          process = QProcess()
-          process.setProcessChannelMode(QProcess.MergedChannels) # type: ignore
-          process.readyReadStandardOutput.connect(self.readOutput)
+     
+     def __init__(self, textArea):
           
+          self.outputChanged = Signal(str)
+          self.outputs = []
+          self.textArea = textArea
+          self.process = QProcess()
+          self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
+          self.process.readyReadStandardOutput.connect(self.readOutput)
+          self.process.finished.connect(self.handleFinished)
+          self.commands = []
+          self.currentIndex = 0
+          
+          self.startNextCommand
+          
+     @Slot(str)
+     def setCommands(self, commands):
+          
+          # process.setProcessChannelMode(QProcess.MergedChannels) # type: ignore
+          # process.readyReadStandardOutput.connect(self.readOutput)
+          # process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
+          # esptool_path = "'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py"
+
           for commandList in commands:
-               command = ' '.join(commandList)
+               # command = ' '.join(commandList)
                # process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=None, universal_newlines=True, bufsize=1)
                # output, _ = process.communicate()
-               process.start(command)
-               process.waitForFinished(-1)
+               # print(command)
+               # process.start(esptool_path, commandList)
+               self.commands.append(commandList)
+               # self.process.setArguments(commandList)
+               # self.process.start()
+               # self.process.waitForFinished()
+               # process.waitForFinished(-1)
                # self.outputs.append(output)
                # print(output)
                # sys.stdout.flush()
                # self.outputChanged.emit(str("cazzo"))
                
+               
+     def startNextCommand(self):
+          if self.currentIndex < len(self.commands):
+               command = self.commands[self.currentIndex]
+               self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
+               self.process.setArguments(command)
+               self.process.start()
+               self.currentIndex += 1
+               
           # self.outputChanged.emit('\n'.join(self.outputs))
      def readOutput(self):
           output = self.sender().readAllStandardOutput().data().decode() # type: ignore
           # self.outputChanged.emit(output)
-          print(output)
+          self.textArea.append(output)
+          
+          # print(output)
+     
+     def handleFinished(self):
+          self.textArea.append("processo terminato. ")
+          self.startNextCommand
 class View(QObject):
      
      def __init__(self, app, model, controller):
@@ -75,10 +108,12 @@ class View(QObject):
           devices = self._controller.getBoardList()
           engine.rootContext().setContextProperty("devices", devices) # Nel contest (file qml) va a trovare una variabile che si chiama values e associa il valore della variabile devices
           
+          self.text_area = engine.rootObjects()[0].findChild(QObject, "textArea")
+          
           combo_box_handler = ComboBoxHandler(self._controller)
           engine.rootContext().setContextProperty("comboBoxHandler", combo_box_handler)
           
-          commandRunner = CommandRunner()
+          commandRunner = CommandRunner(self.text_area)
           engine.rootContext().setProperty("commandRunner", commandRunner)
           
           flashButtonHandler = FlashButton(self._controller, self._model, commandRunner)
