@@ -32,22 +32,58 @@ class serialMACOS(serialInterface.serialInterface):
      def closeBoard(self, board):
           return super().closeBoard(board)
 
-     def flashProgram(self, container):
-          choice = container.get()
+
+     def flashProgramNVS(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          return command
+     
+     def flashProgramBootloader(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
+          return command
+     
+     
+     def flashProgramPartition(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
+          return command
+     
+     
+     def flashProgramFirmware(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
+          return command
+     
+     
+     def flashProgram(self, choice):
+          choice = choice
           #subprocess.run(['esptool.py', "-p", choice, "erase_flash"])
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          #subprocess.run([esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()])
+          # command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          # # print('Using command %s' % ' '.join(command))
+          # esptool.main(command)
+          # command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
+          # # print('Using command %s' % ' '.join(command))
+          # esptool.main(command)
+          # command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
+          # # print('Using command %s' % ' '.join(command))
+          # esptool.main(command)
+          # command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
+          # # print('Using command %s' % ' '.join(command))
+          # esptool.main(command)
+          
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+          
+          # while True:
+          #      output = process.stdout.readline()
+          #      if output == '' and process.poll() is not None:
+          #           break
+          #      if output:
+          #           print(output.strip())
+          
+          output, error = process.communicate()
+          
           #subprocess.run(['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()])
           #subprocess.run(['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()])
           #subprocess.run(['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()])

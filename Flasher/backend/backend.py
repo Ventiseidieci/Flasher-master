@@ -37,9 +37,16 @@ class Backend():
      def assignSKU(self, sku):
           pass
      
-     def flashProgram(self, container):
-          self.myserial.flashProgram(container)
-          self.myserial.closeBoard(self.myserial.getBoard())
+     def flashProgram(self, choice):
+          commandList = []
+          commandList.append(self.myserial.flashProgramNVS(choice))
+          commandList.append(self.myserial.flashProgramBootloader(choice))
+          commandList.append(self.myserial.flashProgramPartition(choice))
+          commandList.append(self.myserial.flashProgramFirmware(choice))
+          
+          return commandList
+          # self.myserial.flashProgram(choice)
+          # self.myserial.closeBoard(self.myserial.getBoard())
           
      def flashSku(self):
           sku = self.skuGenerator.getSku()

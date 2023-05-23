@@ -2,7 +2,7 @@ import serial
 from . import serialInterface
 import os
 import esptool
-
+import subprocess
 class serialWINDOWS(serialInterface.serialInterface):
      
      def __init__(self):
@@ -29,6 +29,29 @@ class serialWINDOWS(serialInterface.serialInterface):
      
      def closeBoard(self, board):
           return super().closeBoard(board)
+     
+     def flashProgramNVS(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          return command
+     
+     def flashProgramBootloader(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
+          return command
+     
+     
+     def flashProgramPartition(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
+          return command
+     
+     
+     def flashProgramFirmware(self, choice):
+          choice = choice
+          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
+          return command
+     
      
      def flashProgram(self, container):
           choice = container.get()

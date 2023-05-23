@@ -53,6 +53,7 @@ Rectangle {
         height: 52
         state: "Seleziona una board..."
         model: devices
+        onCurrentTextChanged: comboBoxHandler.selectedItem = currentText
     }
 
     Text {
@@ -88,16 +89,24 @@ Rectangle {
             
         }
         
+        onClicked: flashButtonHandler.handleButtonClicked()
     }
 
     TextArea {
-        id: textArea
+        id: outputTextArea
         x: 35
         y: 298
         width: 1010
         height: 378
         state: ""
         placeholderText: qsTr("Text Area")
+    }
+
+    Connections {
+        target: commandRunner
+        function onOutputChanged(output) {
+            outputTextArea.text = output
+        }
     }
 
     Text {
@@ -112,6 +121,8 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
         font.family: "Verdana"
     }
+
+
 }
 
 }

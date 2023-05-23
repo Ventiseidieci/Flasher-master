@@ -1,5 +1,3 @@
-import sys
-
 from PySide6 import QtCore, QtWidgets, QtGui
 
 
@@ -8,7 +6,7 @@ class Controller(QtCore.QObject):
      def __init__(self, model):
           super().__init__()
           self.model = model
-          
+          self.myBackend = self.model.getBackend()
           
 #           self.root = customtkinter.CTk()
 #           if getattr(sys, 'frozen', False):
@@ -55,19 +53,14 @@ class Controller(QtCore.QObject):
      #      self.root.destroy()
 
      
-     # def flash(self, event, container):
-     #      #self.myserial.startIDF()
+     def flash(self, choice):
+
+          sku = self.myBackend.flashSku()
+          self.model.setSku(sku)
           
-     #      # ANDREBBE FLASHATO PRIMA LO SKU
-     #      sku = self.myBackend.flashSku()
-     #      self.model.setSku(sku)
-     #      #self.myserial.flash(container)
-          
-     #      self.myBackend.flashProgram(container)
+          return self.myBackend.flashProgram(choice)
      
      def getBoardList(self):
-          #return serialRead.mySerial.get_serial_ports()
-          self.myBackend = self.model.getBackend()
           return self.myBackend.getPorts()
           
      # def updateList(self, event, container):
@@ -77,10 +70,9 @@ class Controller(QtCore.QObject):
      # def printRoba(self, event, choice):
      #      print("optionmenu dropdown clicked:", event, " ", choice)
           
-     # def setBoard(self, board):
-     #      self.model.setBoardName(board)
-          
-     #      self.myBackend.setBoard(board)
+     def setBoard(self, board):
+          self.model.setBoardName(board)
+          self.myBackend.setBoard(board)
      #      #print("hai scelto questa board:", board)
      #      #if not self.thread.is_alive():
      #      #      self.thread = self._createThread()
