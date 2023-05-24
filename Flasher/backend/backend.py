@@ -52,4 +52,5 @@ class Backend():
           sku = self.skuGenerator.getSku()
           self.csvMaker.makeNVS(sku)
           self.myserial.flashNVS()
-          return sku
+          full = self.skuGenerator.getFullSkuData()
+          return sku, full[1]

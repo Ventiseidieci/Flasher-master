@@ -6,6 +6,7 @@ class Model(QtCore.QObject):
           self.boardName = None
           self.board = None
           self.sku = None
+          self.data = None
           self.productionDate = None
           
      def setBoardName(self, name):
@@ -19,3 +20,9 @@ class Model(QtCore.QObject):
      
      def getBackend(self):
           return backend.Backend()
+     
+     def setData(self, data):
+          self.data = data
+     
+     def getData(self):
+          return self.data

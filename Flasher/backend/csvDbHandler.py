@@ -8,6 +8,7 @@ class csvDbHandler(dataStorage.dataStorage):
      def __init__(self):
           super().__init__()
           self.dictionary = {}
+          self.row = ""
           if getattr(sys, 'frozen', False):
               # we are running in a |PyInstaller| bundle
               base_path = sys._MEIPASS  #type: ignore
@@ -30,7 +31,10 @@ class csvDbHandler(dataStorage.dataStorage):
 
      def registerSku(self, sku): #E' un append sul csv 'a'
           
-          row = [str(sku) , str(datetime.today())]
+          self.row = [str(sku) , str(datetime.today())]
           with open(self.csvPath, 'a',newline='') as csvfile:
                writer = csv.writer(csvfile)
-               writer.writerow(row)
+               writer.writerow(self.row)
+     
+     def getRow(self):
+          return self.row

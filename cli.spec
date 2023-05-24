@@ -8,7 +8,7 @@ a = Analysis(
     ['cli.py'],
     pathex=[],
     binaries=[],
-    datas=[('../../../../Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/customtkinter', 'customtkinter/'), ('Flasher/custom_color.json', 'Flasher/'), ('/Users/ale2610/.pyenv/versions/3.11.2/lib/python3.11/site-packages/esptool', 'esptool/.'), ('Flasher/configuration/*.csv', 'Flasher/configuration/'), ('Flasher/configuration/*.bin', 'Flasher/configuration/')],
+    datas=[('Flasher/GUI/mainUI.qml', 'Flasher/GUI/'), ('/Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/.', 'esptool/.'), ('Flasher/configuration/*.csv', 'Flasher/configuration/'), ('Flasher/configuration/*.bin', 'Flasher/configuration/')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -2,7 +2,7 @@ import sys
 from PySide6.QtCore import QObject, Slot, Property, Signal, QProcess
 from PySide6.QtQuick import QQuickItem, QQuickWindow
 from PySide6.QtQml import QQmlApplicationEngine
-import subprocess
+import os
 class FlashButton(QObject):
      
      def __init__(self, controller, model, commandRunner):
@@ -46,6 +46,7 @@ class CommandRunner(QObject):
           self.textArea = textArea
           self.process = QProcess()
           self.process.readyReadStandardOutput.connect(self.readOutput)
+          self.process.setProcessChannelMode(self.process.ProcessChannelMode(0x1)) # type: ignore
           self.process.finished.connect(self.handleFinished)
           self.commands = []
           self.currentIndex = 0
@@ -82,10 +83,19 @@ class View(QObject):
           self._model = model
           self._controller = controller
           self.text_area = None
+          if getattr(sys, 'frozen', False):
+              # we are running in a |PyInstaller| bundle
+              base_path = sys._MEIPASS  #type: ignore
+              extDataDir = os.getcwd() #get current working directory
+
+          else:
+              # we are running in a normal Python environment
+              base_path = os.getcwd()
           
+          qmlPath = os.path.join(base_path, 'Flasher', 'GUI', 'mainUI.qml')
           engine = QQmlApplicationEngine()
           engine.quit.connect(app.quit)
-          engine.load('Flasher/GUI/mainUI.qml')
+          engine.load(qmlPath)
           devices = self._controller.getBoardList()
           engine.rootContext().setContextProperty("devices", devices) # Nel contest (file qml) va a trovare una variabile che si chiama values e associa il valore della variabile devices
           
@@ -110,28 +120,3 @@ class View(QObject):
           
           
           app.exec()
-
-     
-     # def getViewPanel(self):
-     #      return self.viewPanel
-          
-
-# class ViewPanel():
-     
-#      def __init__(self, root, controller):
-#           self.controller = controller
-          
-#           root.grid_rowconfigure(3, weight=1)
-#           root.grid_columnconfigure(2, weight=1)
-          
-#           self.framePanel = customtkinter.CTkFrame(root) # dichiara il frame panel
-#           self.first_flash = firstBlockFrame.Flash_Board(self.framePanel, self.controller) # set del frame panel
-#           self.framePanel.grid(column=0,row=0, columnspan = 3) # posiziona il frame panel
-#           # self.terminalFrame = customtkinter.CTkFrame(root)
-#           # wid = self.terminalFrame.winfo_id()
-#           # os.system('xterm -into %d -geometry 400x100 -sb &' % wid)
-#           # self.framePanel.grid(column=0, row=1, columnspan = 3)
-          
-#      def updateLabel(self, data):
-#           label = self.first_flash.getLabel()
-#           label.configure(text = data)

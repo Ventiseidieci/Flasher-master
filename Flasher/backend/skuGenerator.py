@@ -37,3 +37,5 @@ class skuGenerator():
      def setCharachters(self, chars):
           self.characters = chars
      
+     def getFullSkuData(self):
+          return self.dataStorage.getRow()

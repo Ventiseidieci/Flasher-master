@@ -8,3 +8,7 @@ class dataStorage(abc.ABC):
      @abc.abstractmethod
      def isAvailable(sku):
           raise NotImplemented
+     
+     @abc.abstractmethod
+     def getRow(self):
+          raise NotImplemented
