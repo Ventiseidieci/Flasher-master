@@ -94,18 +94,27 @@ Rectangle {
         
         onClicked: flashButtonHandler.handleButtonClicked()
     }
-
-    TextArea {
-        objectName: "outputTextArea"
-        id: outputTextArea
+    ScrollView{
         x: 35
-        y: 298
+        y: 298        
         width: 1010
         height: 378
-        state: ""
-        placeholderText: qsTr("Text Area")
-        readOnly: true
+        contentHeight: outputTextArea.height        
+
+        TextArea {
+            objectName: "outputTextArea"
+            id: outputTextArea
+            // x: 35
+            // y: 298
+            width: 1010
+            height: 378
+            state: ""
+            placeholderText: qsTr("Text Area")
+            readOnly: true
+        }
     }
+
+
 
     // Connections {
     //     target: commandRunner
@@ -113,7 +122,7 @@ Rectangle {
     //         outputTextArea.text = output
     //     }
     // }
-
+    
     Text {
         id: text2
         x: 35

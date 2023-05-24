@@ -42,9 +42,9 @@ class CommandRunner(QObject):
           
           self.outputChanged = Signal(str)
           self.outputs = []
+          self.output = 0
           self.textArea = textArea
           self.process = QProcess()
-          # self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
           self.process.readyReadStandardOutput.connect(self.readOutput)
           self.process.finished.connect(self.handleFinished)
           self.commands = []
@@ -53,49 +53,27 @@ class CommandRunner(QObject):
      @Slot(str)
      def setCommands(self, commands):
           
-          # process.setProcessChannelMode(QProcess.MergedChannels) # type: ignore
-          # process.readyReadStandardOutput.connect(self.readOutput)
-          # process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
-          # esptool_path = "'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py"
-
           for commandList in commands:
-               # command = ' '.join(commandList)
-               # process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=None, universal_newlines=True, bufsize=1)
-               # output, _ = process.communicate()
-               # print(command)
-               # process.start(esptool_path, commandList)
-               self.commands.append(commandList)
-               # self.process.setArguments(commandList)
-               # self.process.start()
-               # self.process.waitForFinished()
-               # process.waitForFinished(-1)
-               # self.outputs.append(output)
-               # print(output)
-               # sys.stdout.flush()
-               # self.outputChanged.emit(str("cazzo"))
-          
+               command = ' '.join(commandList)
+               self.commands.append(command)
+
           self.startNextCommand()
                
                
      def startNextCommand(self):
           if self.currentIndex < len(self.commands):
                command = self.commands[self.currentIndex]
-               # self.process.setProgram("'Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/esptool.py")
-               self.process.setProgram("python")
-               self.process.setArguments(command)
-               self.process.start()
+               self.process.start("bash", ["-c", command])
                self.currentIndex += 1
-               
-          # self.outputChanged.emit('\n'.join(self.outputs))
+
      def readOutput(self):
-          output = self.sender().readAllStandardOutput().data().decode() # type: ignore
-          # self.outputChanged.emit(output)
-          self.textArea.append(output)
-          
-          # print(output)
+          self.output = self.process.readAllStandardOutput().data().decode().strip()
+          self.textArea.append(self.output)
+
      
      def handleFinished(self):
-          self.textArea.appendPlainText("processo terminato. ")
+          #  SU RASPBERRY FARE UN SEGNALE DI OUTPUT
+          self.textArea.append("processo terminato. ")
           self.startNextCommand()
 class View(QObject):
      
@@ -114,10 +92,10 @@ class View(QObject):
           application_window = engine.rootObjects()[0]
 
           self.rectangle = application_window.findChild(QQuickItem, "rectangle") #type: ignore
-          # figli = self.rectangle.children() #type: ignore
+          figli = self.rectangle.children() #type: ignore
           
-          # for figlio in figli:
-          #      print(figlio.objectName())
+          for figlio in figli:
+               print(figlio.objectName())
           self.text_area = self.rectangle.findChild(QQuickItem, "outputTextArea") #type: ignore
           
           
