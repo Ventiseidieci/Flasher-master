@@ -1,3 +1,5 @@
 .DS_store
 
-cli.*
+dist/cli
+build/cli/cli.pkg
+dist/cli.app/Contents/MacOS/cli 
