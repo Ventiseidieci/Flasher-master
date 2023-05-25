@@ -1,5 +1,5 @@
 .DS_store
 
-dist/cli
-build/cli/cli.pkg
-dist/cli.app/Contents/MacOS/cli 
+dist
+build
+Container
