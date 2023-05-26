@@ -18,6 +18,6 @@ class App(QtGui.QGuiApplication):
           
 def main():
      
-     app = App(sys.argv)
-     
-     sys.exit(app.exec_())
+     app = App(sys.argv) 
+     app.exec()
+     sys.exit()

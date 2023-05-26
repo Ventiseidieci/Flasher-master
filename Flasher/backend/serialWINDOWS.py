@@ -51,22 +51,6 @@ class serialWINDOWS(serialInterface.serialInterface):
           choice = choice
           command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
           return command
-     
-     
-     def flashProgram(self, container):
-          choice = container.get()
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
-          command = ["-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
-          print('Using command %s' % ' '.join(command))
-          esptool.main(command)
           
      def flashNVS(self):
           base_path = super().getBasePath()

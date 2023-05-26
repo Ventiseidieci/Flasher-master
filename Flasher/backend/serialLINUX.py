@@ -51,19 +51,10 @@ class serialLINUX(serialInterface.serialInterface):
           choice = choice
           command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
           return command
-     
-     
-     def flashProgram(self, container):
-          choice = container
-          nvsCmd = 'esptool.py -p '  + choice + ' -b 460800 --before default_reset --after no_reset --chip esp32 write_flash --flash_mode dio --flash_size 8MB --flash_freq 40m 0x9000' + super().getNvs()
-          bootloaderCmd = 'esptool.py -p '  + choice + ' -b 460800 --before default_reset --after no_reset --chip esp32 write_flash --flash_mode dio --flash_size 8MB --flash_freq 40m 0x1000 ' + super().getBootloader()
-          partitionCmd = 'esptool.py -p '  + choice + ' -b 460800 --before default_reset --after no_reset --chip esp32 write_flash --flash_mode dio --flash_size 8MB --flash_freq 40m 0x8000' + super().getPartition()
-          firmwareCmd = 'esptool.py -p '  + choice + ' -b 460800 --before default_reset --after hard_reset --chip esp32 write_flash --flash_mode dio --flash_size 8MB --flash_freq 40m 0x10000' + super().getFirmware()
-          os.system(nvsCmd)
-          os.system(bootloaderCmd)
-          os.system(partitionCmd)
-          os.system(firmwareCmd)
-          
+               
      def flashNVS(self):
-          os.system("$IDF_PATH/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate configuration/nvsPartition.csv configuration/nvsPartition.bin 0x5000")
-        
+          base_path = super().getBasePath()
+          idf_path = os.path.join(base_path, 'esp', 'esp-idf')
+          #subprocess.run(["/Users/ale2610/esp/esp-idf/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py", "generate", "configuration/nvsPartition.csv", "configuration/nvsPartition.bin", '0x5000'])
+          subprocess.run([ "$IDF_PATH/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate " + base_path + "/Flasher/configuration/nvsPartition.csv " + base_path + "/Flasher/configuration/nvsPartition.bin 0x5000"], shell=True)
+          #subprocess.run([ '' + idf_path + "/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate", base_path + '/Flasher/configuration/nvsPartition.csv', base_path + '/Flasher/configuration/nvsPartition.bin 0x5000'], shell=True)

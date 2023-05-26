@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
     'cli.py',
     '--clean',
-    # '--noconsole',
+    '-n',
+    'Vbite_Flasher',
+    # '--console',
+    # '--onedir',
     '--windowed',
     '--onefile',
     '--noconfirm',
@@ -12,11 +17,14 @@ PyInstaller.__main__.run([
     # '--log-level',
     # 'DEBUG',
     # '-d',
-    # 'imports',
+    # 'all',
+    # '--python-executable=/Users/ale2610/.pyenv/shims/python',
+    '--add-data',
+    'Flasher/GUI/images/favicon.icns:Flasher/GUI/images/',
     '--add-data',
     'Flasher/GUI/mainUI.qml:Flasher/GUI/',
     '--add-data',
-    '/Users/ale2610/esp/esp-idf_4.0.0/components/esptool_py/esptool/.:esptool/.',
+    'esp_idf/.:esp_idf/.',
     # INSERIRE IL PATH DOVE E' INSTALLATO ESPTOOL
     '--add-data',
     'Flasher/configuration/*.csv:Flasher/configuration/',

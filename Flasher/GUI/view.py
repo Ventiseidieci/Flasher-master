@@ -64,7 +64,10 @@ class CommandRunner(QObject):
      def startNextCommand(self):
           if self.currentIndex < len(self.commands):
                command = self.commands[self.currentIndex]
-               self.process.start("bash", ["-c", command])
+               if sys.platform.startswith('win'):
+                    self.process.start("cmd.exe", ["-c", command])
+               else:
+                    self.process.start("bash", ["-c", command])
                self.currentIndex += 1
 
      def readOutput(self):
@@ -102,10 +105,10 @@ class View(QObject):
           application_window = engine.rootObjects()[0]
 
           self.rectangle = application_window.findChild(QQuickItem, "rectangle") #type: ignore
-          figli = self.rectangle.children() #type: ignore
+          # figli = self.rectangle.children() #type: ignore
           
-          for figlio in figli:
-               print(figlio.objectName())
+          # for figlio in figli:
+          #      print(figlio.objectName())
           self.text_area = self.rectangle.findChild(QQuickItem, "outputTextArea") #type: ignore
           
           

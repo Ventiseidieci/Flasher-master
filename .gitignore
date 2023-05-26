@@ -3,3 +3,5 @@
 dist
 build
 Container
+esp_idf
+esptool

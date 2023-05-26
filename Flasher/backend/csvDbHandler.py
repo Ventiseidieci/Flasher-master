@@ -1,9 +1,9 @@
-from . import dataStorage
+from . import dataStorageInterface
 import csv
 from datetime import datetime
 import os
 import sys
-class csvDbHandler(dataStorage.dataStorage):
+class csvDbHandler(dataStorageInterface.dataStorageInterface):
      
      def __init__(self):
           super().__init__()

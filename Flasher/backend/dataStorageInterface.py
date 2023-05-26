@@ -1,6 +1,6 @@
 import abc
 
-class dataStorage(abc.ABC):
+class dataStorageInterface(abc.ABC):
      
      def __init__(self):
           pass

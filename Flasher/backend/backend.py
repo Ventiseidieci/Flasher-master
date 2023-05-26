@@ -45,8 +45,6 @@ class Backend():
           commandList.append(self.myserial.flashProgramFirmware(choice))
           
           return commandList
-          # self.myserial.flashProgram(choice)
-          # self.myserial.closeBoard(self.myserial.getBoard())
           
      def flashSku(self):
           sku = self.skuGenerator.getSku()
