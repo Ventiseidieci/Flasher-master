@@ -100,8 +100,14 @@ class serialMACOS(serialInterface.serialInterface):
           return command
 
      def flashNVS(self):
-          base_path = super().getBasePath()
+          if getattr(sys, 'frozen', False):
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               subprocess.run(['python ', base_path + "/esp_idf/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate " + base_path + "/Flasher/configuration/nvsPartition.csv " + base_path + "/Flasher/configuration/nvsPartition.bin 0x5000"], shell=True)
+          else:
+               base_path = super().getBasePath()
+               subprocess.run([ base_path + "/esp_idf/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate " + base_path + "/Flasher/configuration/nvsPartition.csv " + base_path + "/Flasher/configuration/nvsPartition.bin 0x5000"], shell=True)
           # idf_path = os.path.join(base_path, 'esp', 'esp-idf')
           #subprocess.run(["/Users/ale2610/esp/esp-idf/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py", "generate", "configuration/nvsPartition.csv", "configuration/nvsPartition.bin", '0x5000'])
-          subprocess.run([ "$IDF_PATH/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate " + base_path + "/Flasher/configuration/nvsPartition.csv " + base_path + "/Flasher/configuration/nvsPartition.bin 0x5000"], shell=True)
+          
           #subprocess.run([ '' + idf_path + "/components/nvs_flash/nvs_partition_generator/nvs_partition_gen.py generate", base_path + '/Flasher/configuration/nvsPartition.csv', base_path + '/Flasher/configuration/nvsPartition.bin 0x5000'], shell=True)

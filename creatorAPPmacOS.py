@@ -10,7 +10,7 @@ PyInstaller.__main__.run([
     # '--console',
     # '--onedir',
     '--windowed',
-    '--onefile',
+    # '--onefile',
     '--noconfirm',
     '--icon',
     'favicon.icns',
