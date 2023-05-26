@@ -87,13 +87,13 @@ class View(QObject):
           self._controller = controller
           self.text_area = None
           if getattr(sys, 'frozen', False):
-              # we are running in a |PyInstaller| bundle
-              base_path = sys._MEIPASS  #type: ignore
-              extDataDir = os.getcwd() #get current working directory
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               extDataDir = os.getcwd() #get current working directory
 
           else:
-              # we are running in a normal Python environment
-              base_path = os.getcwd()
+               # we are running in a normal Python environment
+               base_path = os.getcwd()
           
           qmlPath = os.path.join(base_path, 'Flasher', 'GUI', 'mainUI.qml')
           engine = QQmlApplicationEngine()
