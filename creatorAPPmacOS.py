@@ -3,6 +3,8 @@
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
+    '--hidden-import',
+    'serial',
     'cli.py',
     '--clean',
     '-n',
