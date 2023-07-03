@@ -1,9 +1,9 @@
 import sys
-from PySide6 import QtWidgets
 from PySide6 import QtGui
 from Flasher.backend.model import Model
 from Flasher.controller.controller import Controller
 from Flasher.GUI.view import View
+import os
 
 # class App(QtWidgets.QApplication):
 class App(QtGui.QGuiApplication):
@@ -13,11 +13,13 @@ class App(QtGui.QGuiApplication):
           self.main_controller = Controller(self.model)
           self.main_view = View(self, self.model, self.main_controller)
 
-     def quit(self):
-          super().quit()
+     # def quit(self):
+     #      super().quit()
           
 def main():
      
      app = App(sys.argv) 
      app.exec()
+     # app.quit()
+     
      sys.exit()

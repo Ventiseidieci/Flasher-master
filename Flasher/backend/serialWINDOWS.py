@@ -100,10 +100,14 @@ class serialWINDOWS(serialInterface.serialInterface):
           if getattr(sys, 'frozen', False):
                # we are running in a |PyInstaller| bundle
                base_path = sys._MEIPASS  #type: ignore
-               subprocess.run(['python ', base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate'  + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'], shell=True)
+               command = 'python '+ base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate ' + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'
+               # print(command)
+               # subprocess.run(['py', base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate ' + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'], shell=True)
+               subprocess.run(command, shell=True)
+               # subprocess.run(['python ', base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate'  + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'], shell=True)
           else:
                base_path = super().getBasePath()
                command = 'python '+ base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate ' + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'
-               print(command)
+               # print(command)
                # subprocess.run(['py', base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate ' + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'], shell=True)
                subprocess.run(command, shell=True)
