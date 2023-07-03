@@ -28,6 +28,7 @@ class serialInterface():
           else:
                self.board.close()
                self.board = serial.Serial(board, 115200, timeout=5)
+               self.board.close()
                
      def getBoard(self):
           return self.board

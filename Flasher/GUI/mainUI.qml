@@ -7,7 +7,7 @@ this file manually, you might introduce QML code that is not supported by Qt Des
 Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on .ui.qml files.
 */
 import QtQuick 6.5
-import QtQuick.Controls 6.5
+import QtQuick.Controls 6.5 // 2.15?
 import QtQuick.Layouts 1.15
 
 ApplicationWindow{
@@ -51,7 +51,7 @@ ApplicationWindow{
                     height: 64
                     anchors.left: parent.left
                     anchors.top: parent.top
-                    source: "images/favicon.icns"
+                    source: "images/favicon.ico"
                     anchors.topMargin: 0
                     anchors.leftMargin: 0
                     fillMode: Image.PreserveAspectFit
@@ -95,15 +95,21 @@ ApplicationWindow{
                     }
                     ComboBox {
                         id: combobox
+                        objectName: "ComboBox"
                         x: 0
                         y: 172
                         width: parent.width - 10
                         height: 52
                         opacity: 1
                         scale: 1
+                        // PlaceholderText: "Seleziona una Board..."
                         state: "Seleziona una board..."
                         model: devices
+                        currentIndex: -1
+                        displayText: currentIndex === -1 ? "Seleziona una Board..." : currentText
+                        
                         onCurrentTextChanged: comboBoxHandler.selectedItem = currentText
+                        onCurrentIndexChanged: comboBoxHandler.selectedItem = currentText
                     }
                 }
 

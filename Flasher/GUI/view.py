@@ -65,11 +65,21 @@ class CommandRunner(QObject):
           if self.currentIndex < len(self.commands):
                command = self.commands[self.currentIndex]
                if sys.platform.startswith('win'):
-                    self.process.start("cmd.exe", ["-c", command])
+                    # /k Carries out the command specified by string and continues.
+                    #  /c Carries out the command specified by string and then stops SERVE QUESTO, COSI' SI FERMA E ESEGUE GLI ALTRI COMANDI
+                    self.process.start("cmd.exe", ["/c",command])
                else:
                     self.process.start("bash", ["-c", command])
                self.currentIndex += 1
 
+          # for command in self.commands:
+          #      if sys.platform.startswith('win'):
+          #           # /k Carries out the command specified by string and continues.
+          #           self.process.start("cmd.exe", ["/k",command])
+          #      else:
+          #           self.process.start("bash", ["-c", command])
+          #      self.currentIndex += 1
+               
      def readOutput(self):
           self.output = self.process.readAllStandardOutput().data().decode().strip()
           self.textArea.append(self.output)
@@ -100,6 +110,7 @@ class View(QObject):
           engine.quit.connect(app.quit)
           engine.load(qmlPath)
           devices = self._controller.getBoardList()
+          # devices.insert(0,"Seleziona una board...")
           engine.rootContext().setContextProperty("devices", devices) # Nel contest (file qml) va a trovare una variabile che si chiama values e associa il valore della variabile devices
           
           application_window = engine.rootObjects()[0]
@@ -111,10 +122,12 @@ class View(QObject):
           #      print(figlio.objectName())
           self.text_area = self.rectangle.findChild(QQuickItem, "outputTextArea") #type: ignore
           
-          
+          self.combo_box = self.rectangle.findChild(QQuickItem, "ComboBox") #type: ignore
+
           combo_box_handler = ComboBoxHandler(self._controller)
           engine.rootContext().setContextProperty("comboBoxHandler", combo_box_handler)
           
+          self.combo_box.setProperty("currentIndex", -1)
           commandRunner = CommandRunner(self.text_area)
           engine.rootContext().setProperty("commandRunner", commandRunner)
           

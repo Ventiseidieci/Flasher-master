@@ -1,7 +1,7 @@
 import serial
 from . import serialInterface
 import os
-import esptool
+import sys
 import subprocess
 class serialWINDOWS(serialInterface.serialInterface):
      
@@ -32,27 +32,78 @@ class serialWINDOWS(serialInterface.serialInterface):
      
      def flashProgramNVS(self, choice):
           choice = choice
-          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          if getattr(sys, 'frozen', False):
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               extDataDir = os.getcwd() #get current working directory
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          else:
+               # we are running in a normal Python environment
+               base_path = os.getcwd()
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
+          # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
      
      def flashProgramBootloader(self, choice):
           choice = choice
-          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "keep", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
+          if getattr(sys, 'frozen', False):
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               extDataDir = os.getcwd() #get current working directory
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getBootloader()]
+          else:
+               # we are running in a normal Python environment
+               base_path = os.getcwd()
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getBootloader()]
+          # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
      
      
      def flashProgramPartition(self, choice):
           choice = choice
-          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
+          if getattr(sys, 'frozen', False):
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               extDataDir = os.getcwd() #get current working directory
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getPartition()]
+          else:
+               # we are running in a normal Python environment
+               base_path = os.getcwd()
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getPartition()]
+          # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
      
      
      def flashProgramFirmware(self, choice):
           choice = choice
-          command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "hard_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
+          if getattr(sys, 'frozen', False):
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               extDataDir = os.getcwd() #get current working directory
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getFirmware()]
+          else:
+               # we are running in a normal Python environment
+               base_path = os.getcwd()
+               esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
+               command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getFirmware()]
+          # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
           
      def flashNVS(self):
-          base_path = super().getBasePath()
-          path = os.path.join( '%IDF_TOOLS_PATH%', 'frameworks', 'esp-idf-v5.0.1', 'components', 'nvs_flash', 'nvs_partition_generator', 'nvs_partition_gen.py' )
-          os.system("python " + path + " generate " + base_path + r"\Flasher\configuration\nvsPartition.csv " + base_path + r"\Flasher\configuration\nvsPartition.bin " + '0x5000')
+          if getattr(sys, 'frozen', False):
+               # we are running in a |PyInstaller| bundle
+               base_path = sys._MEIPASS  #type: ignore
+               subprocess.run(['python ', base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate'  + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'], shell=True)
+          else:
+               base_path = super().getBasePath()
+               command = 'python '+ base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate ' + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'
+               print(command)
+               # subprocess.run(['py', base_path + r'\esp_idf_win\components\nvs_flash\nvs_partition_generator\nvs_partition_gen.py generate ' + base_path + '\\Flasher\\configuration\\nvsPartition.csv ' + base_path + '\\Flasher\\configuration\\nvsPartition.bin 0x5000'], shell=True)
+               subprocess.run(command, shell=True)
