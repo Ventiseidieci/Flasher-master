@@ -56,13 +56,13 @@ class serialWINDOWS(serialInterface.serialInterface):
                extDataDir = os.getcwd() #get current working directory
                esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'dist', 'esptool.exe')
                # esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
-               command = [esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getBootloader()]
+               command = [esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
                # command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getBootloader()]
           else:
                # we are running in a normal Python environment
                base_path = os.getcwd()
                esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
-               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getBootloader()]
+               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x1000", super().getBootloader()]
           # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
      
@@ -75,13 +75,13 @@ class serialWINDOWS(serialInterface.serialInterface):
                extDataDir = os.getcwd() #get current working directory
                esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'dist', 'esptool.exe')
                # esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
-               command = [esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getPartition()]
+               command = [esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
                # command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getPartition()]
           else:
                # we are running in a normal Python environment
                base_path = os.getcwd()
                esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
-               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getPartition()]
+               command = ["python",esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x8000", super().getPartition()]
           # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
      
@@ -94,13 +94,13 @@ class serialWINDOWS(serialInterface.serialInterface):
                extDataDir = os.getcwd() #get current working directory
                # esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
                esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'dist', 'esptool.exe')
-               command = [esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getFirmware()]
+               command = [esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
                # command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getFirmware()]
           else:
                # we are running in a normal Python environment
                base_path = os.getcwd()
                esptoolPath = os.path.join(base_path, 'esp_idf_win','components','esptool_py', 'esptool', 'esptool.py')
-               command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getFirmware()]
+               command = ["python", esptoolPath, "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x10000", super().getFirmware()]
           # command = ['esptool.py', "-p", choice , "-b", "460800", "--before", "default_reset", "--after", "no_reset", "--chip", "esp32", "write_flash", "--flash_mode", "dio", "--flash_size", "8MB", "--flash_freq", "40m", "0x9000", super().getNvs()]
           return command
           
