@@ -1,8 +1,8 @@
 import PyInstaller.__main__
 
-PyInstaller.__main__.run([ 
-    '--hidden-import',
-    'serial',
+PyInstaller.__main__.run([
+    '--debug',
+    'imports',
     'cli.py',
     '--clean',
     '-n',
