@@ -1,3 +1,7 @@
 key,type,encoding,value
 tech,namespace,,
+<<<<<<< Updated upstream
 SKU,data,string,8y68Zd
+=======
+SKU,data,string,mkg7E6
+>>>>>>> Stashed changes
