@@ -1,8 +1,6 @@
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
-    '--debug',
-    'imports',
     'cli.py',
     '--clean',
     '-n',
