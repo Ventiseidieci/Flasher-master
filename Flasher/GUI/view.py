@@ -1,5 +1,6 @@
 import sys
-from PySide6.QtCore import QObject, Slot, Property, Signal, QProcess
+from typing import Optional
+from PySide6.QtCore import QObject, Slot, Property, Signal, QProcess, QCoreApplication
 from PySide6.QtQuick import QQuickItem, QQuickWindow
 from PySide6.QtQml import QQmlApplicationEngine
 import os
@@ -89,6 +90,16 @@ class CommandRunner(QObject):
           #  SU RASPBERRY FARE UN SEGNALE DI OUTPUT
           self.textArea.append("processo terminato. ")
           self.startNextCommand()
+
+class HandleClose(QObject):
+     def __init__(self, app):
+          super().__init__()
+          self.app = app
+          
+     @Slot()
+     def handle_close(self):
+          self.app.quit()
+          
 class View(QObject):
      
      def __init__(self, app, model, controller):
@@ -96,6 +107,7 @@ class View(QObject):
           self._model = model
           self._controller = controller
           self.text_area = None
+          self.app = app
           if getattr(sys, 'frozen', False):
                # we are running in a |PyInstaller| bundle
                base_path = sys._MEIPASS  #type: ignore
@@ -107,7 +119,9 @@ class View(QObject):
           
           qmlPath = os.path.join(base_path, 'Flasher', 'GUI', 'mainUI.qml')
           engine = QQmlApplicationEngine()
-          engine.quit.connect(app.quit)
+          engine.quit.connect(self.app.quit)
+          closer = HandleClose(self.app)
+          engine.rootContext().setContextProperty("handleClose", closer)
           engine.load(qmlPath)
           devices = self._controller.getBoardList()
           # devices.insert(0,"Seleziona una board...")

@@ -11,13 +11,16 @@ import QtQuick.Controls 6.5 // 2.15?
 import QtQuick.Layouts 1.15
 
 ApplicationWindow{
-   visible: true
-   width: 1080
-   height: 720
-   minimumWidth: 600
-   minimumHeight: 600
-   title: "Vbite Flasher"
-   objectName: "root"
+    id: mainWindow
+    visible: true
+    width: 1080
+    height: 720
+    minimumWidth: 600
+    minimumHeight: 600
+    title: "Vbite Flasher"
+    objectName: "root"
+    onClosing: handleClose.handle_close()
+    
     Rectangle {
         objectName: "rectangle"
         id: rectangle
@@ -187,4 +190,7 @@ ApplicationWindow{
             }
         }
     } 
+    // function handleClose() {
+    //     Qt.quit() // This will close the GUI
+    // }
 }
