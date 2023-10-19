@@ -22,5 +22,4 @@ def main():
      app = App(sys.argv) 
      app.exec()
      app.quit()
-     
      sys.exit()

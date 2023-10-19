@@ -190,7 +190,4 @@ ApplicationWindow{
             }
         }
     } 
-    // function handleClose() {
-    //     Qt.quit() // This will close the GUI
-    // }
 }

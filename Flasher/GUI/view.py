@@ -1,7 +1,7 @@
 import sys
 from typing import Optional
-from PySide6.QtCore import QObject, Slot, Property, Signal, QProcess, QCoreApplication
-from PySide6.QtQuick import QQuickItem, QQuickWindow
+from PySide6.QtCore import QObject, Slot, Property, Signal, QProcess
+from PySide6.QtQuick import QQuickItem
 from PySide6.QtQml import QQmlApplicationEngine
 import os
 class FlashButton(QObject):
@@ -61,25 +61,16 @@ class CommandRunner(QObject):
 
           self.startNextCommand()
                
-               
      def startNextCommand(self):
           if self.currentIndex < len(self.commands):
                command = self.commands[self.currentIndex]
                if sys.platform.startswith('win'):
                     # /k Carries out the command specified by string and continues.
-                    #  /c Carries out the command specified by string and then stops SERVE QUESTO, COSI' SI FERMA E ESEGUE GLI ALTRI COMANDI
+                    # /c Carries out the command specified by string and then stops SERVE QUESTO, COSI' SI FERMA E ESEGUE GLI ALTRI COMANDI
                     self.process.start("cmd.exe", ["/c",command])
                else:
                     self.process.start("bash", ["-c", command])
                self.currentIndex += 1
-
-          # for command in self.commands:
-          #      if sys.platform.startswith('win'):
-          #           # /k Carries out the command specified by string and continues.
-          #           self.process.start("cmd.exe", ["/k",command])
-          #      else:
-          #           self.process.start("bash", ["-c", command])
-          #      self.currentIndex += 1
                
      def readOutput(self):
           self.output = self.process.readAllStandardOutput().data().decode().strip()
@@ -99,6 +90,7 @@ class HandleClose(QObject):
      @Slot()
      def handle_close(self):
           self.app.quit()
+          # Viene chiamata quando la GUI si chiude, e quindi chiude anche tutti gli altri processi
           
 class View(QObject):
      
@@ -119,23 +111,18 @@ class View(QObject):
           
           qmlPath = os.path.join(base_path, 'Flasher', 'GUI', 'mainUI.qml')
           engine = QQmlApplicationEngine()
-          engine.quit.connect(self.app.quit)
+          engine.quit.connect(self.app.quit) #Forse non serve
           closer = HandleClose(self.app)
           engine.rootContext().setContextProperty("handleClose", closer)
           engine.load(qmlPath)
+          
           devices = self._controller.getBoardList()
-          # devices.insert(0,"Seleziona una board...")
           engine.rootContext().setContextProperty("devices", devices) # Nel contest (file qml) va a trovare una variabile che si chiama values e associa il valore della variabile devices
           
           application_window = engine.rootObjects()[0]
-
           self.rectangle = application_window.findChild(QQuickItem, "rectangle") #type: ignore
-          # figli = self.rectangle.children() #type: ignore
-          
-          # for figlio in figli:
-          #      print(figlio.objectName())
+
           self.text_area = self.rectangle.findChild(QQuickItem, "outputTextArea") #type: ignore
-          
           self.combo_box = self.rectangle.findChild(QQuickItem, "ComboBox") #type: ignore
 
           combo_box_handler = ComboBoxHandler(self._controller)
@@ -147,6 +134,5 @@ class View(QObject):
           
           flashButtonHandler = FlashButton(self._controller, self._model, commandRunner)
           engine.rootContext().setContextProperty("flashButtonHandler", flashButtonHandler)
-          
           
           app.exec()

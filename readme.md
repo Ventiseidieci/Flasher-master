@@ -1,3 +1,3 @@
 # Flasher
 
-la branch che funziona è QT_DEPLOY
+la branch che funziona è: 'release'
