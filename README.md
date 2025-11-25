@@ -1,6 +1,6 @@
 # Flasher-master
 
-refer to release branch
+NON USARE QUESTA BRANCH, ---->>>>>   refer to release branch
 
 ## Nota Bene
 
