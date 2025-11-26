@@ -1,12 +1,10 @@
-USAMI
+# Flasher-master
 
 la branch che funziona è: 'release'
 
 ## Nota Bene
 
 Una volta flashato, va riavviato altrimenti non viene trovato con il filtro
-
-# Flasher-master
 
 ## Descrizione
 
