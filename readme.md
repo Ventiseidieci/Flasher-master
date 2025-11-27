@@ -2,11 +2,21 @@
 
 Tool GUI/CLI in Python per eseguire il flashing di dispositivi ESP32 usando `esptool`.
 
-**Questo README fornisce**: come avviare l'app, architettura dei componenti, dipendenze principali e note per packaging.
+## Installazione
+
+### Windows
+
+[windows release](https://github.com/Ventiseidieci/Flasher-master/releases/tag/v1.0.1)
+
+### macOS
+
+[macOS release](https://github.com/Ventiseidieci/Flasher-master/releases/tag/v1.0.1-macOS)
 
 ## Nota Bene
 
-Una volta flashato, va riavviato altrimenti non viene trovato con il filtro
+**Questo README fornisce**: come avviare il codice sorgente, architettura dei componenti, dipendenze principali e note per packaging.
+
+Una volta flashato, vbite va riavviato altrimenti non viene trovato con il filtro del ble
 
 ## Prerequisiti
 
