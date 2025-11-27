@@ -4,6 +4,10 @@ Tool GUI/CLI in Python per eseguire il flashing di dispositivi ESP32 usando `esp
 
 **Questo README fornisce**: come avviare l'app, architettura dei componenti, dipendenze principali e note per packaging.
 
+## Nota Bene
+
+Una volta flashato, va riavviato altrimenti non viene trovato con il filtro
+
 ## Prerequisiti
 
 - **Python**: 3.10+ consigliato.
@@ -36,6 +40,7 @@ Tool GUI/CLI in Python per eseguire il flashing di dispositivi ESP32 usando `esp
 ## Struttura del progetto (sintesi)
 
 - **`cli.py`**: entrypoint che avvia l'app.
+
 - **`Flasher/__main__.py`**: crea `Model`, `Controller` e `View` (QML).
 - **`Flasher/GUI/`**: interfaccia QML (`mainUI.qml`) e binding Python (`view.py`).
 - **`Flasher/controller/`**: `controller.py` coordina Model ↔ Backend.
@@ -63,8 +68,11 @@ Esempio di flusso quando si preme `Flash`:
 
 ## Eseguibili / Packaging
 
-- La repo contiene file `.spec` e helper (`creatorAPPmacOS.py`, `creatorEXEWin.py`) per PyInstaller.
+- La repo contiene i file  `creatorAPPmacOS.py` e `creatorEXEWin.py` per PyInstaller, servono a crerare i precompilati per fare le release.
 - Quando l'app è impacchettata con PyInstaller, il codice rileva lo stato `frozen` e usa `sys._MEIPASS` per localizzare risorse incluse.
+
+Non sono sicuro di questo:
+
 - Se intendi creare un eseguibile, usa i `.spec` forniti o gli script helper al root.
 
 ## Note pratiche e suggerimenti
@@ -80,31 +88,3 @@ Esempio di flusso quando si preme `Flash`:
 - Se la `ComboBox` non mostra porte: verifica che i dispositivi seriali siano collegati e che il processo abbia permessi.
 - Se il flashing fallisce, esegui manualmente uno dei comandi stampati sul terminale per verificare output/errors di `esptool`.
 - Una volta flashato, va riavviato altrimenti non viene trovato con il filtro
-
-<!-- # Flasher-master
-
-la branch che funziona è: 'release'
-
-## Nota Bene
-
-Una volta flashato, va riavviato altrimenti non viene trovato con il filtro
-
-## Descrizione
-
-Flasher è un tool per gestire il flashing di firmware — basato su uno script Python e su componenti aggiuntivi inclusi nella repo.
-Questa repo contiene vari script/utility (es. `cli.py`, `creatorEXEWin.py`, etc.) e file di packaging (spec per PyInstaller).
-Lo scopo è fornire un modo semplice e replicabile di distribuire l’app come eseguibile standalone, senza che l’utente debba installare manualmente Python o le dipendenze.
-
-## Struttura del progetto
-
-Alcune delle principali cartelle/file nella branch `release`:
-
-- `cli.py` — script principale da linea di comando.
-- `creatorEXEWin.py`, `creatorAPPmacOS.py` — script ausiliari per la generazione di eseguibili su Windows/macOS.
-- Vari file `.spec` (es. `cli.spec`, `Vbite_Flasher.spec`, `esptool.spec`, `nvs_gen.spec`) usati da PyInstaller per creare eseguibili.
-- `esp_idf/`, `esp_idf_win/`, `Flasher/` — cartelle relative a componenti o librerie aggiuntive incluse (es. eventuali wrapper, script, risorse).
-
-## Dipendenze
-
-Poiché il progetto è in parte Python, potresti avere dipendenze esterne da includere nel packaging.
-Per gestire le dipendenze Python, si consiglia di usare un ambiente virtuale e un file `requirements.txt` (o analoghi). -->
