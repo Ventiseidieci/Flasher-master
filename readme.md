@@ -1,6 +1,6 @@
 # Vbite Flasher (Flasher-master)
 
-Tool GUI/CLI in Python per eseguire il flashing di dispositivi ESP32 usando `esptool`.
+Tool GUI/CLI in Python per eseguire il flashing di dispositivi ESP32 Wroom N8 usando `esptool`.
 
 ## Installazione
 
