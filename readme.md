@@ -95,6 +95,5 @@ Non sono sicuro di questo:
 
 ## Risoluzione problemi comuni
 
-- Se la `ComboBox` non mostra porte: verifica che i dispositivi seriali siano collegati e che il processo abbia permessi.
-- Se il flashing fallisce, esegui manualmente uno dei comandi stampati sul terminale per verificare output/errors di `esptool`.
-- Una volta flashato, va riavviato altrimenti non viene trovato con il filtro
+- Se la `ComboBox` non mostra porte: verifica che i dispositivi seriali siano collegati e riavviare il software.
+- Una volta flashato, vbite va riavviato altrimenti non viene trovato con il filtro del ble
