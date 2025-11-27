@@ -1,7 +1,11 @@
 .DS_store
-
+*.pyc
+/__pycache__
 dist
 build
 Container
 esptool
 Driver
+
+.vscode
+./__pycache__
