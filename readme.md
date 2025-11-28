@@ -2,7 +2,7 @@
 
 Tool GUI/CLI in Python per eseguire il flashing di dispositivi ESP32 Wroom N8 usando `esptool`.
 
-## Installazione
+## Installazione applicativo (consigliata)
 
 ### Windows
 
@@ -24,22 +24,24 @@ Una volta flashato, vbite va riavviato altrimenti non viene trovato con il filtr
 - **Dipendenze Python**: `PySide6`, `pyserial`.
 - **Strumenti esterni**: i tool contenuti in `esp_idf/` o `esp_idf_win/` (es. `esptool`, `nvs_gen`) sono usati dalla app.
 
-## Installazione rapida (consigliata)
+## Installazione codice sorgente
 
-1. Crea e attiva un ambiente virtuale:
+1. Scarica lo zip e estrailo
+
+2. Crea e attiva un ambiente virtuale:
 
      ```zsh
      python -m venv .venv
      source .venv/bin/activate
      ```
 
-2. Installa le dipendenze minime:
+3. Installa le dipendenze minime:
 
      ```zsh
      pip install PySide6 pyserial
      ```
 
-3. Avvia l'app GUI:
+4. Avvia l'app GUI:
 
      ```zsh
      python cli.py
@@ -59,7 +61,7 @@ Una volta flashato, vbite va riavviato altrimenti non viene trovato con il filtr
 
 ## Architettura e flusso (breve)
 
-- **Pattern**: una semplice architettura tipo MVC/MVVM.
+- **Pattern**: un' architettura tipo MVC/MVVM.
   - `Model` (`Flasher/backend/model.py`): mantiene stato minimale (es. `boardName`, `sku`, `data`) e fornisce il `Backend`.
   - `Controller` (`Flasher/controller/controller.py`): coordina le azioni; es. `getBoardList()`, `setBoard(board)`, `flash(choice)`.
   - `View` (`Flasher/GUI/view.py` + `Flasher/GUI/mainUI.qml`): QML per UI; espone oggetti Python al QML tramite `engine.rootContext().setContextProperty(...)`.
@@ -79,6 +81,7 @@ Esempio di flusso quando si preme `Flash`:
 ## Eseguibili / Packaging
 
 - La repo contiene i file  `creatorAPPmacOS.py` e `creatorEXEWin.py` per PyInstaller, servono a crerare i precompilati per fare le release.
+     -  li troverainella cartella dist, nel terminale saranno presenti più indicazioni 
 - Quando l'app è impacchettata con PyInstaller, il codice rileva lo stato `frozen` e usa `sys._MEIPASS` per localizzare risorse incluse.
 
 Non sono sicuro di questo:
