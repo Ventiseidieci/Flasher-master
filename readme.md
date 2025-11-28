@@ -21,7 +21,7 @@ Una volta flashato, vbite va riavviato altrimenti non viene trovato con il filtr
 ## Prerequisiti
 
 - **Python**: 3.10+ consigliato.
-- **Dipendenze Python**: `PySide6`, `pyserial` e per packaging `pyInstaller.
+- **Dipendenze Python**: `PySide6`, `pyserial` e per packaging `pyInstaller`.
 - **Strumenti esterni**: i tool contenuti in `esp_idf/` o `esp_idf_win/` (es. `esptool`, `nvs_gen`) sono usati dalla app.
 
 ## Installazione codice sorgente
