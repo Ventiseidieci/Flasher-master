@@ -4,9 +4,10 @@ Tool GUI/CLI in Python per eseguire il flashing di dispositivi  usando `esptool`
 
 - ESP32 Wroom N8.
 
-## Documentazione in Meccatronica
+## Documentazione in Meccatronica DA LEGGERE
 
 Di seguito una guida che illustra tutto il procedimento di installazione delle dipendenze, impacchettamento e funzionamento logico
+
 [read.me meccatronica](https://github.com/Ventiseidieci/Meccatronica/blob/main/Industrializzazione/Flashing/ESP32/readme.md)
 
 ## Installazione applicativo (consigliata)
