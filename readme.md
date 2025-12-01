@@ -6,7 +6,7 @@ Tool GUI/CLI in Python per eseguire il flashing di dispositivi  usando `esptool`
 
 ## Documentazione in Meccatronica DA LEGGERE
 
-Di seguito una guida che illustra tutto il procedimento di installazione delle dipendenze, impacchettamento e funzionamento logico
+Di seguito una guida che illustra tutto ciò che c'è dietro il flasher dal punto di vista del funzionamento logico, spiega come vengono usate le dipendenze, esp-idf e esptool.py. Strumenti forniti direttamente da espressif.
 
 [read.me meccatronica](https://github.com/Ventiseidieci/Meccatronica/blob/main/Industrializzazione/Flashing/ESP32/readme.md)
 
